@@ -29,4 +29,35 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run sync
+name: Schoology Sync
+
+on:
+  schedule:
+    - cron: "0 */3 * * *"   # every 3 hours
+  workflow_dispatch:          # allows manual trigger from GitHub UI
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    env:
+      SCHOOLOGY_CONSUMER_KEY: ${{ secrets.SCHOOLOGY_CONSUMER_KEY }}
+      SCHOOLOGY_CONSUMER_SECRET: ${{ secrets.SCHOOLOGY_CONSUMER_SECRET }}
+      SCHOOLOGY_DOMAIN: ${{ secrets.SCHOOLOGY_DOMAIN }}
+      ICLOUD_USERNAME: ${{ secrets.ICLOUD_USERNAME }}
+      ICLOUD_APP_PASSWORD: ${{ secrets.ICLOUD_APP_PASSWORD }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run sync
         run: PYTHONPATH=$GITHUB_WORKSPACE python main.py
