@@ -16,6 +16,9 @@ class SchoologyClient:
     def _get(self, endpoint, params=None):
         url = f"{self.base_url}{endpoint}"
         response = requests.get(url, auth=self.auth, params=params)
+        print(f"  GET {url} → {response.status_code}")
+        if not response.ok:
+            print(f"  Response body: {response.text[:500]}")
         response.raise_for_status()
         return response.json()
 
